@@ -12,6 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+FROM golang:1.17 AS dlv
+RUN CGO_ENABLED=0 go install github.com/go-delve/delve/cmd/dlv@latest
+
 FROM golang:1.17-alpine AS builder
 
 RUN apk --no-cache add git openssh
@@ -34,9 +37,11 @@ RUN mkdir -p /var/run/vars && \
     date '+%Y-%m-%dT%H:%M:%S' > /var/run/vars/BUILD_DATE && \
     CGO_ENABLED=0 go build \
         -ldflags "-X main.GitRepo=$(cat /var/run/vars/GIT_REPO) -X main.GitTag=$(cat /var/run/vars/GIT_LAST_TAG) -X main.GitCommit=$(cat /var/run/vars/GIT_HEAD_COMMIT) -X main.GitDirty=$(cat /var/run/vars/GIT_MODIFIED) -X main.BuildTime=$(cat /var/run/vars/BUILD_DATE)" \
+        -gcflags "all=-N -l" \
         -o fs/haproxy-ingress-controller .
 
 FROM haproxytech/haproxy-alpine:2.5
+COPY --from=dlv /go/bin/dlv /dlv
 
 ARG TARGETPLATFORM
 

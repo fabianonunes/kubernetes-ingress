@@ -1,3 +1,10 @@
 #!/usr/bin/with-contenv sh
 
-exec /haproxy-ingress-controller --with-s6-overlay ${EXTRA_OPTIONS}
+/dlv exec /haproxy-ingress-controller \
+  --continue \
+  --listen=:40143 \
+  --headless=true \
+  --log=true \
+  --api-version=2 \
+  --accept-multiclient \
+  -- --with-s6-overlay ${EXTRA_OPTIONS}
