@@ -127,6 +127,125 @@ spec:
                         param:
                           type: string
                           pattern: '^[^\s]+$'
+                    tune_options:
+                      type: object
+                      properties:
+                        buffers_limit:
+                          type: integer
+                        buffers_reserve:
+                          type: integer
+                          minimum: 2
+                        bufsize:
+                          type: integer
+                        comp_maxlevel:
+                          type: integer
+                        h2_header_table_size:
+                          type: integer
+                          minimum: 4096
+                          maximum: 65535
+                        h2_initial_window_size:
+                          type: integer
+                        h2_max_concurrent_streams:
+                          type: integer
+                        h2_max_frame_size:
+                          type: integer
+                          minimum: 16384
+                          maximum: 16777215
+                        http_cookielen:
+                          type: integer
+                        http_logurilen:
+                          type: integer
+                        http_maxhdr:
+                          type: integer
+                          minimum: 1
+                          maximum: 32767
+                        idle_pool_shared:
+                          type: string
+                          enum:
+                            - enabled
+                            - disabled
+                        idletimer:
+                          type: integer
+                          minimum: 0
+                          maximum: 65535
+                        listener_multi_queue:
+                          type: string
+                          enum:
+                            - enabled
+                            - disabled
+                        lua_forced_yield:
+                          type: integer
+#                        lua_maxmem:
+#                          type: integer
+                        lua_service_timeout:
+                          type: integer
+                        lua_session_timeout:
+                          type: integer
+                        lua_task_timeout:
+                          type: integer
+                        maxaccept:
+                          type: integer
+                        maxpollevents:
+                          type: integer
+                        maxrewrite:
+                          type: integer
+                        pattern_cache_size:
+                          type: integer
+                        pipesize:
+                          type: integer
+                        pool_high_fd_ratio:
+                          type: integer
+                          minimum: 1
+                          maximum: 100
+                        pool_low_fd_ratio:
+                          type: integer
+                          minimum: 1
+                          maximum: 100
+                        rcvbuf_client:
+                          type: integer
+                        rcvbuf_server:
+                          type: integer
+                        recv_enough:
+                          type: integer
+                        runqueue_depth:
+                          type: integer
+                        sched_low_latency:
+                          type: string
+                          enum:
+                            - enabled
+                            - disabled
+                        sndbuf_client:
+                          type: integer
+                        sndbuf_server:
+                          type: integer
+                        ssl_cachesize:
+                          type: integer
+                        ssl_capture_buffer_size:
+                          type: integer
+                        ssl_ctx_cache_size:
+                          type: integer
+                        ssl_default_dh_param:
+                          type: integer
+                        ssl_keylog:
+                          type: string
+                          enum:
+                            - enabled
+                            - disabled
+                        ssl_lifetime:
+                          type: integer
+                        ssl_maxrecord:
+                          type: integer
+                        vars_global_max_size:
+                          type: integer
+                        vars_proc_max_size:
+                          type: integer
+                        vars_reqres_max_size:
+                          type: integer
+                        vars_sess_max_size:
+                          type: integer
+                        vars_txn_max_size:
+                          type: integer
+
                 log_targets:
                   type: array
                   items:
