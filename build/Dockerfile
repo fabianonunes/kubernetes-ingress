@@ -11,6 +11,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+FROM golang:1.21 AS dlv
+RUN CGO_ENABLED=0 go install github.com/go-delve/delve/cmd/dlv@latest
 
 FROM golang:1.22-alpine AS builder
 
@@ -27,6 +29,7 @@ RUN mkdir -p /var/run/vars && \
     git describe --abbrev=0 --tags > /var/run/vars/GIT_LAST_TAG || echo "dev" > /var/run/vars/GIT_LAST_TAG && \
     CGO_ENABLED=0 go build \
         -ldflags "-X github.com/haproxytech/kubernetes-ingress/pkg/version.GitTag=$(cat /var/run/vars/GIT_LAST_TAG)" \
+        -gcflags "all=-N -l" \
         -o fs/haproxy-ingress-controller .
 
 FROM haproxytech/haproxy-alpine:2.8
@@ -67,5 +70,6 @@ RUN apk --no-cache add socat openssl util-linux htop tzdata curl libcap && \
     rm -rf /var/lib/pebble
 
 COPY --from=builder /src/fs/haproxy-ingress-controller .
+COPY --from=dlv /go/bin/dlv /dlv
 
 ENTRYPOINT ["/start.sh"]

@@ -21,4 +21,11 @@ export GOMEMLIMIT="${MEMLIMIT}MiB"
 
 echo "Memory limit for Ingress Controller: ${GOMEMLIMIT}"
 
-exec /haproxy-ingress-controller --with-s6-overlay ${EXTRA_OPTIONS}
+/dlv exec /haproxy-ingress-controller \
+  --continue \
+  --listen=:40143 \
+  --headless=true \
+  --log=true \
+  --api-version=2 \
+  --accept-multiclient \
+  -- --with-s6-overlay ${EXTRA_OPTIONS}
